@@ -60,6 +60,15 @@ while isRunning:
                 modelo1.scale[0] -= 2
                 modelo1.scale[1] -= 2
                 modelo1.scale[2] -= 2
+            elif event.key == pygame.K_w:
+                modelo1.translate[1] += 5
+            elif event.key == pygame.K_a:
+                modelo1.translate[0] -= 5
+            elif event.key == pygame.K_s:
+                modelo1.translate[1] -= 5
+            elif event.key == pygame.K_d:
+                modelo1.translate[0] += 5
+
 
     rend.glClear()  # Limpiar la pantalla antes de dibujar nuevamente
 
@@ -80,5 +89,5 @@ while isRunning:
     pygame.display.flip()  # Actualizar la pantalla con los cambios realizados
     clock.tick(60)  # Asegurar que el juego no exceda los 60 cuadros por segundo
 
-rend.generateFrameBuffer("output.bmp")
+rend.generateFrameBuffer("./output.bmp")
 pygame.quit()  # Salir del juego y cerrar la ventana de Pygame
