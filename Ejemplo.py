@@ -13,7 +13,7 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()  # Se utiliza para asegurarse de que el juego corra a una velocidad específica de cuadros por segundo
 
 #Cargar modelo
-modelo1 = Model("face.obj")
+modelo1 = Model("model.obj")
 modelo1.translate[0] = width/2  #que su poiscion en x sea
 modelo1.translate[1] = height/3
 
@@ -52,6 +52,14 @@ while isRunning:
                 modelo1.rotate[0] += 10
             elif event.key == pygame.K_DOWN:
                 modelo1.rotate[0] -= 10
+            elif event.key  == pygame.K_k:                
+                modelo1.scale[0] += 2
+                modelo1.scale[1] += 2
+                modelo1.scale[2] += 2
+            elif event.key == pygame.K_l:
+                modelo1.scale[0] -= 2
+                modelo1.scale[1] -= 2
+                modelo1.scale[2] -= 2
 
     rend.glClear()  # Limpiar la pantalla antes de dibujar nuevamente
 
