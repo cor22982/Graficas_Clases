@@ -1,5 +1,4 @@
 import struct 
-
 def char(c):
     #para generar y guardar en 1 byte
     return struct.pack("=c", c.encode("ascii"))
@@ -20,6 +19,8 @@ class Renderer(object):
         self.glColor(1, 1, 1)  # Establecer el color inicial a blanco (RGB: 1, 1, 1)
         self.glClearColor(0, 0, 0)  # Establecer el color de fondo inicial a negro (RGB: 0, 0, 0)
         self.glClear()  # Limpiar la pantalla inicialmente
+        self.models = []
+        self.vertexShader = None #ahorita no tengo asignado un vertex shader
 
     # Recomendable dejar RGB en valores entre 0 y 1 porque de 0 a 255 no es simple calcular colores
     def glColor(self, r, g, b):
@@ -62,20 +63,46 @@ class Renderer(object):
             
     # Dibujar una línea donde v0 y v1 es un array porque es un punto x,y usando la fórmula de línea
     def glLine(self, v0, v1, color=None):
-        # y = mx + b
-        # asegurarse que los valores son enteros porque en un bitmap tira error
-        x0 = int(v0[0])
-        x1 = int(v1[0])
-        y0 = int(v0[1])
-        y1 = int(v1[1])
-        m = (y1 - y0)/(x1-x0)
-        b = y0 -m*x0
-        color = [int(i * 255) for i in (color or self.currColor)]
+        x0, y0 = v0
+        x1, y1 = v1
 
-        # dibujar la línea de forma inmediata posible
+        x0 = int(x0)
+        x1 = int(x1)
+        y0 = int(y0)
+        y1 = int(y1)
+
+        dx = abs(x1 - x0)
+        dy = abs(y1 - y0)
+
+        steep = dy > dx
+
+        if steep:
+            x0, y0 = y0, x0
+            x1, y1 = y1, x1
+
+        if x0 > x1:
+            x0, x1 = x1, x0
+            y0, y1 = y1, y0
+
+        dx = abs(x1 - x0)
+        dy = abs(y1 - y0)
+
+        offset = 0
+        threshold = dx
+        y = y0
+        y_step = 1 if y0 < y1 else -1
+
         for x in range(x0, x1 + 1):
-            y = m*x + b
-            self.glPoint(round(x),round(y))
+            if steep:
+                self.glPoint(y, x, color)
+            else:
+                self.glPoint(x, y, color)
+
+            offset += dy * 2
+
+            if offset >= threshold:
+                y += y_step
+                threshold += dx * 2
 
     # Dibujando una línea con algoritmo de Lineas de Bresenham
     # en y = mx + b hay errores de una línea:
@@ -171,8 +198,46 @@ class Renderer(object):
                     color = self.frameBuffer[x][y]
                     color = bytes([color[2], color[1], color[0]])                    
                     file.write(color)
-            
+    
+    def glRender (self):
+        for model in self.models:
+            #por cada modelo en la lista lo voy a dibujar
+            #por cada modelo tengo que agarrar su matriz modelo
 
+            mMat = model.GetModelMatrix()
+            for face in model.faces:
+                #revisamos cuantos vertices tiene la cara si tiene
+                #cuatro vertices , hay que crear un segundo traingulo
+                vertCount = len(face)
+                v0 = model.vertices[ face[0][0] - 1 ] 
+                v1 = model.vertices[ face[1][0] - 1 ]
+                v2 =  model.vertices[ face[2][0] - 1 ]
+                if vertCount == 4 :
+                    v3 = model.vertices[ face[3][0] - 1 ] #si hay un vertice demas crea otra.
+
+                #si contamos con un vertex shader asignado se manda
+                #cada vertice para transformarlos
+                #pasar las matrices necesarias para este vertexshader
+                if self.vertexShader:
+                    v0 = self.vertexShader(v0, modelMatrix = mMat)
+                    v1 = self.vertexShader(v1, modelMatrix = mMat)
+                    v2 = self.vertexShader(v2, modelMatrix = mMat)
+                    if vertCount == 4 :
+                        v3 = self.vertexShader(v3, modelMatrix = mMat)
+
+                #self.glPoint(int(v0[0]), int(v0[1])) #obtengo la coordenada x del vertice
+                #self.glPoint(int(v1[0]), int(v2[1]))
+                #self.glPoint(int(v2[0]), int(v1[1]))
+                #if vertCount == 4 :
+                #    self.glPoint(int(v3[0]),int(v1[1]))
+
+                self.glLine((v0[0], v0[1]),(v1[0], v1[1]))
+                self.glLine((v1[0], v1[1]),(v2[0], v2[1]))
+                self.glLine((v2[0], v2[1]),(v0[0], v0[1])) #del 2 al 0 creamos un triangulo
+                if vertCount == 4 :
+                    self.glLine((v0[0], v0[1]),(v2[0], v2[1])) # si hay 4 vertices creamos el otro triangulo
+                    self.glLine((v2[0], v2[1]),(v3[0], v3[1]))
+                    self.glLine((v3[0], v3[1]),(v0[0], v0[1]))
 
             
 
