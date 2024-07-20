@@ -8,6 +8,10 @@ def word(w):
 def dword(d):
     return struct.pack("=l", d)
 
+POINTS = 0
+LINES  = 1
+TRIANGLES = 2
+QUADS = 3
 class Renderer(object):
     # Constructor
     def __init__(self, screen):
@@ -21,7 +25,7 @@ class Renderer(object):
         self.glClear()  # Limpiar la pantalla inicialmente
         self.models = []
         self.vertexShader = None #ahorita no tengo asignado un vertex shader
-
+        self.primitiveType = POINTS #por defecto es triangulo
     # Recomendable dejar RGB en valores entre 0 y 1 porque de 0 a 255 no es simple calcular colores
     def glColor(self, r, g, b):
         # Asegurarse de que los valores de RGB estén en el rango de 0 a 1
@@ -205,6 +209,10 @@ class Renderer(object):
             #por cada modelo tengo que agarrar su matriz modelo
 
             mMat = model.GetModelMatrix()
+            #
+            vertexBuffer = []  #es un espacio reservado en memoria temporal el buffer, en cambio aqui guardare mis vertices
+            
+
             for face in model.faces:
                 #revisamos cuantos vertices tiene la cara si tiene
                 #cuatro vertices , hay que crear un segundo traingulo
@@ -224,6 +232,14 @@ class Renderer(object):
                     v2 = self.vertexShader(v2, modelMatrix = mMat)
                     if vertCount == 4 :
                         v3 = self.vertexShader(v3, modelMatrix = mMat)
+                
+                vertexBuffer.append(v0)
+                vertexBuffer.append(v1)
+                vertexBuffer.append(v2)
+                if vertCount == 4 :
+                    vertexBuffer.append(v3) #lo agregmos a nuestro listado de vertices. Ahorita estmos guardando la posicion. 
+
+            self.glDrawPrimitives(vertexBuffer)
 
                 #self.glPoint(int(v0[0]), int(v0[1])) #obtengo la coordenada x del vertice
                 #self.glPoint(int(v1[0]), int(v2[1]))
@@ -231,13 +247,29 @@ class Renderer(object):
                 #if vertCount == 4 :
                 #    self.glPoint(int(v3[0]),int(v1[1]))
 
-                self.glLine((v0[0], v0[1]),(v1[0], v1[1]))
-                self.glLine((v1[0], v1[1]),(v2[0], v2[1]))
-                self.glLine((v2[0], v2[1]),(v0[0], v0[1])) #del 2 al 0 creamos un triangulo
-                if vertCount == 4 :
-                    self.glLine((v0[0], v0[1]),(v2[0], v2[1])) # si hay 4 vertices creamos el otro triangulo
-                    self.glLine((v2[0], v2[1]),(v3[0], v3[1]))
-                    self.glLine((v3[0], v3[1]),(v0[0], v0[1]))
+                # self.glLine((v0[0], v0[1]),(v1[0], v1[1]))
+                # self.glLine((v1[0], v1[1]),(v2[0], v2[1]))
+                # self.glLine((v2[0], v2[1]),(v0[0], v0[1])) #del 2 al 0 creamos un triangulo
+                # if vertCount == 4 :
+                #     self.glLine((v0[0], v0[1]),(v2[0], v2[1])) # si hay 4 vertices creamos el otro triangulo
+                #     self.glLine((v2[0], v2[1]),(v3[0], v3[1]))
+                #     self.glLine((v3[0], v3[1]),(v0[0], v0[1]))
+    def glDrawPrimitives (self, buffer):
+        if self.primitiveType == POINTS:
+            for point in buffer:
+                self.glPoint(int(point[0]),int(point[1]))
+        elif self.primitiveType == LINES:
+            for i in range (0 , len(buffer), 3):
+                p0 = buffer[i]
+                p1 = buffer[i + 1]
+                p2 = buffer[i + 2]
+                self.glLine((p0[0], p0[1]),(p1[0], p1[1]))
+                self.glLine((p1[0], p1[1]),(p2[0], p2[1]))
+                self.glLine((p2[0], p2[1]),(p0[0], p0[1]))
+
+                
+
+
 
             
 

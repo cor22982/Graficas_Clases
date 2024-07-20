@@ -1,7 +1,7 @@
 # Pygame es utilizado para presentar la imagen de forma inmediata
 import pygame
 from pygame.locals import *
-from GL import Renderer
+from GL import *
 from model import Model
 from shaders import VertexShader
 # Estimar el tamaño de pantalla
@@ -68,6 +68,10 @@ while isRunning:
                 modelo1.translate[1] -= 5
             elif event.key == pygame.K_d:
                 modelo1.translate[0] += 5
+            elif event.key == pygame.K_1:
+                rend.primitiveType = POINTS
+            elif event.key == pygame.K_2:
+                rend.primitiveType = LINES          
 
 
     rend.glClear()  # Limpiar la pantalla antes de dibujar nuevamente
