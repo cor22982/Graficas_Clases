@@ -1,4 +1,7 @@
 import struct 
+import numpy as np
+from camera import Camera
+from math import tan, pi
 def char(c):
     #para generar y guardar en 1 byte
     return struct.pack("=c", c.encode("ascii"))
@@ -19,6 +22,10 @@ class Renderer(object):
         self.screen = screen
         # Obtiene el rectángulo que describe la pantalla y extrae el ancho y el alto
         _, _, self.width, self.height = screen.get_rect()  # get_rect devuelve x, y, width, height, pero "_" es una convención para indicar que la variable no se usará
+
+        self.camera = Camera()
+        self.glViewport(0,0,self.width, self.height)
+        self.glProyection()
 
         self.glColor(1, 1, 1)  # Establecer el color inicial a blanco (RGB: 1, 1, 1)
         self.glClearColor(0, 0, 0)  # Establecer el color de fondo inicial a negro (RGB: 0, 0, 0)
@@ -227,11 +234,27 @@ class Renderer(object):
                 #cada vertice para transformarlos
                 #pasar las matrices necesarias para este vertexshader
                 if self.vertexShader:
-                    v0 = self.vertexShader(v0, modelMatrix = mMat)
-                    v1 = self.vertexShader(v1, modelMatrix = mMat)
-                    v2 = self.vertexShader(v2, modelMatrix = mMat)
+                    v0 = self.vertexShader(v0, 
+                                            modelMatrix = mMat, 
+                                            viewMatrix = self.camera.GetViewMatrix(),
+                                            projectionMatrix= self.projectionMatrix,
+                                            viewportMatrix= self.viewPortMatrix)
+                    v1 = self.vertexShader(v1, 
+                                            modelMatrix = mMat, 
+                                            viewMatrix = self.camera.GetViewMatrix(),
+                                            projectionMatrix= self.projectionMatrix,
+                                            viewportMatrix= self.viewPortMatrix)
+                    v2 = self.vertexShader(v2, 
+                                            modelMatrix = mMat, 
+                                            viewMatrix = self.camera.GetViewMatrix(),
+                                            projectionMatrix= self.projectionMatrix,
+                                            viewportMatrix= self.viewPortMatrix)
                     if vertCount == 4 :
-                        v3 = self.vertexShader(v3, modelMatrix = mMat)
+                        v3 = self.vertexShader(v3, 
+                                            modelMatrix = mMat, 
+                                            viewMatrix = self.camera.GetViewMatrix(),
+                                            projectionMatrix= self.projectionMatrix,
+                                            viewportMatrix= self.viewPortMatrix)
                 
                 vertexBuffer.append(v0)
                 vertexBuffer.append(v1)
@@ -266,6 +289,30 @@ class Renderer(object):
                 self.glLine((p0[0], p0[1]),(p1[0], p1[1]))
                 self.glLine((p1[0], p1[1]),(p2[0], p2[1]))
                 self.glLine((p2[0], p2[1]),(p0[0], p0[1]))
+
+    def glViewport (self, x, y, width, height):
+        #el viewport puede ser mas pequeño que la pantalla. 
+        self.vpx = int(x)
+        self.vpy = int(y)
+        self.vpWidht = width
+        self.vpHeight = height
+        self.viewPortMatrix = np.matrix([[width/2,0,0,x+ width/2],
+                                         [0,height/2,0,y+height/2],
+                                         [0,0,0.5,0.5],
+                                         [0,0,0,1]])
+        
+    def glProyection (self, n = 0.1, f = 1000, fov = 60):
+        aspectRatio = self.vpWidht/self.vpHeight
+        fov *= pi / 180  #lo convierto a radianes y ahora calculo t
+        t = tan(fov/2) * n
+        r = t * aspectRatio
+        self.projectionMatrix = np.matrix([[n/r,0,0,0],
+                                           [0,n/t,0,0],
+                                           [0,0,-(f+n)/(f-n),-(2*f*n)/(f-n)],
+                                           [0,0,-1,0]])
+
+
+        
 
                 
 

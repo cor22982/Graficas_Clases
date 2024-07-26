@@ -13,13 +13,12 @@ screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()  # Se utiliza para asegurarse de que el juego corra a una velocidad específica de cuadros por segundo
 
 #Cargar modelo
-modelo1 = Model("model.obj")
-modelo1.translate[0] = width/2  #que su poiscion en x sea
-modelo1.translate[1] = height/3
+modelo1 = Model("face.obj")
 
-modelo1.scale[0] = 10
-modelo1.scale[1] = 10
-modelo1.scale[2] = 10
+modelo1.translate[2] = -10
+modelo1.scale[0] = 0.1
+modelo1.scale[1] = 0.1
+modelo1.scale[2] = 0.1
 
 # Pasar la pantalla al Renderer de GL
 rend = Renderer(screen)
@@ -45,9 +44,9 @@ while isRunning:
                 isRunning = False
 
             elif event.key == pygame.K_RIGHT:
-                modelo1.rotate[1] += 10
+                rend.camera.translate[0] -= 1
             elif event.key == pygame.K_LEFT:
-                modelo1.rotate[1] -= 10
+                rend.camera.translate[0] += 1 #aqui movemos la camara no el modelo
             elif event.key == pygame.K_UP:
                 modelo1.rotate[0] += 10
             elif event.key == pygame.K_DOWN:
@@ -56,10 +55,6 @@ while isRunning:
                 modelo1.scale[0] += 2
                 modelo1.scale[1] += 2
                 modelo1.scale[2] += 2
-            elif event.key == pygame.K_l:
-                modelo1.scale[0] -= 2
-                modelo1.scale[1] -= 2
-                modelo1.scale[2] -= 2
             elif event.key == pygame.K_w:
                 modelo1.translate[1] += 5
             elif event.key == pygame.K_a:
