@@ -12,6 +12,12 @@ height = 540
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()  # Se utiliza para asegurarse de que el juego corra a una velocidad específica de cuadros por segundo
 
+#Llenado de triangulos
+triangle1 = [[10,80],[50,160],[70,80]]
+triangle2 = [[180,50],[150,1],[70,180]]
+triangle3 = [[180,120],[120,160],[150,160]]
+
+
 #Cargar modelo
 modelo1 = Model("face.obj")
 
@@ -51,7 +57,7 @@ while isRunning:
                 modelo1.rotate[0] += 10
             elif event.key == pygame.K_DOWN:
                 modelo1.rotate[0] -= 10
-            elif event.key  == pygame.K_k:                
+            elif event.key  == pygame.K_k:             
                 modelo1.scale[0] += 2
                 modelo1.scale[1] += 2
                 modelo1.scale[2] += 2
@@ -83,8 +89,11 @@ while isRunning:
 
     # Dibujar lineas usando Bresenham
     
-    rend.glRender()
+    #rend.glRender()
 
+    rend.glTriangle(triangle1[0], triangle1[1], triangle1[2])
+    rend.glTriangle(triangle2[0], triangle2[1], triangle2[2])
+    rend.glTriangle(triangle3[0], triangle3[1], triangle3[2])
     pygame.display.flip()  # Actualizar la pantalla con los cambios realizados
     clock.tick(60)  # Asegurar que el juego no exceda los 60 cuadros por segundo
 

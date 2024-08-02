@@ -277,18 +277,23 @@ class Renderer(object):
                 #     self.glLine((v0[0], v0[1]),(v2[0], v2[1])) # si hay 4 vertices creamos el otro triangulo
                 #     self.glLine((v2[0], v2[1]),(v3[0], v3[1]))
                 #     self.glLine((v3[0], v3[1]),(v0[0], v0[1]))
-    def glDrawPrimitives (self, buffer):
+    def glDrawPrimitives(self, buffer):
         if self.primitiveType == POINTS:
             for point in buffer:
-                self.glPoint(int(point[0]),int(point[1]))
+                self.glPoint(int(point[0]), int(point[1]))
         elif self.primitiveType == LINES:
-            for i in range (0 , len(buffer), 3):
+            if len(buffer) % 3 != 0:
+                print("Warning: The buffer length for LINES is not a multiple of 3. Truncating the buffer.")
+                buffer = buffer[:len(buffer) - (len(buffer) % 3)]
+            for i in range(0, len(buffer), 3):
                 p0 = buffer[i]
                 p1 = buffer[i + 1]
                 p2 = buffer[i + 2]
-                self.glLine((p0[0], p0[1]),(p1[0], p1[1]))
-                self.glLine((p1[0], p1[1]),(p2[0], p2[1]))
-                self.glLine((p2[0], p2[1]),(p0[0], p0[1]))
+                self.glLine((p0[0], p0[1]), (p1[0], p1[1]))
+                self.glLine((p1[0], p1[1]), (p2[0], p2[1]))
+                self.glLine((p2[0], p2[1]), (p0[0], p0[1]))
+
+
 
     def glViewport (self, x, y, width, height):
         #el viewport puede ser mas pequeño que la pantalla. 
@@ -310,6 +315,63 @@ class Renderer(object):
                                            [0,n/t,0,0],
                                            [0,0,-(f+n)/(f-n),-(2*f*n)/(f-n)],
                                            [0,0,-1,0]])
+        
+    def glTriangle(self, A, B, C , color = None):
+
+        if A[1] < B[1] :
+            A, B = B, A
+        elif A[1] < C[1] :
+            A, C = C, A
+        elif B[1] < C[1]:
+            B, C = C, B
+        
+        self.glLine((A[0], A[1]),(B[0], B[1]))
+        self.glLine((B[0], B[1]),(C[0], C[1]))
+        self.glLine((C[0], C[1]),(A[0], A[1]))
+
+        def flatBotton (vA, vB, vC):
+            try:
+                mBA =  (vB[0]-vA[0])/(vB[1]-vA[1]) #la pendiente en x.
+                mCA = (vC[0]-vA[0])/(vC[1]-vA[1])
+            except:
+                pass
+            else:
+                x0 = vB[0]
+                x1 = vC[0]
+                for y in range (int(vB[1]), int(vA[1])):
+                    #va pasando para todas las y de hasta abajo a arriba
+                    self.glLine([x0, y], [x1, y], color) #aqui pintamos
+                    x0 += mBA
+                    x1 += mCA
+                    
+        def flatTop (vA, vB, vC):
+            try:
+                mCA =  (vC[0]-vA[0])/(vC[1]-vA[1]) #la pendiente en x.
+                mCB = (vC[0]-vB[0])/(vC[1]-vB[1])
+            except:
+                pass
+            else:
+                x0 = vA[0]
+                x1 = vB[0]
+                for y in range (int(vC[1]), int(vA[1])):
+                    #va pasando para todas las y de hasta abajo a arriba
+                    self.glLine([x0, y], [x1, y], color) #aqui pintamos
+                    x0 -= mCA
+                    x1 -= mCB
+            
+        if B[1] == C[1]:
+            flatBotton(A,B,C)
+        elif A[1] == B[1]:
+            flatTop(A,B,C)
+        else:
+            D =  [A[0] + ((B[1]- A[1])/(C[1]- A[1])) * (C[0]- A[0]), B[1]]
+            flatBotton(A,B,D)
+            flatTop(B,D,C) 
+            #Tengo dividirlo en 2 triangulos
+            # y dibujo ambos tipos de triangulos. 
+            #Teorema del intercepto
+            pass
+
 
 
         
