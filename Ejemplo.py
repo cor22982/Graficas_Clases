@@ -5,8 +5,8 @@ from GL import *
 from model import Model
 from shaders import VertexShader
 # Estimar el tamaño de pantalla
-width = 960
-height = 540
+width = 500
+height = 640
 
 # Generar la pantalla
 screen = pygame.display.set_mode((width, height))
@@ -28,12 +28,12 @@ rend.vertexShader = VertexShader #asgino el vertex
 
 rend.glColor(0, 0, 1)  # Establecer el color actual a magenta (RGB: 1, 0, 1)
 rend.glClearColor(0, 0, 0)  # Establecer el color del fondo a rosa (RGB: 1, 0.5, 1)
-rend.primitiveType = LINES
 # GameLoop
 # Esto es para asegurarse de que el bucle principal siga corriendo, simulando el comportamiento en segundo plano
 rend.models.append(modelo1)
-rend.camera.rotate[0] = -40 #rotar arriba
-rend.camera.translate[1] = 13  #mirada de arriba
+#Posicion de la camara
+#rend.camera.rotate[0] = -40 #rotar arriba
+#rend.camera.translate[1] = 13  #mirada de arriba
 
 isRunning = True
 while isRunning:
@@ -48,30 +48,12 @@ while isRunning:
             if event.key == pygame.K_ESCAPE:
                 isRunning = False
 
-            elif event.key == pygame.K_RIGHT:
-                rend.camera.translate[0] -= 1
-            elif event.key == pygame.K_LEFT:
-                rend.camera.translate[0] += 1 #aqui movemos la camara no el modelo
-            elif event.key == pygame.K_UP:
-                modelo1.rotate[0] += 10
-            elif event.key == pygame.K_DOWN:
-                modelo1.rotate[0] -= 10
-            elif event.key  == pygame.K_k:             
-                modelo1.scale[0] += 2
-                modelo1.scale[1] += 2
-                modelo1.scale[2] += 2
-            elif event.key == pygame.K_w:
-                modelo1.translate[1] += 5
-            elif event.key == pygame.K_a:
-                modelo1.translate[0] -= 5
-            elif event.key == pygame.K_s:
-                modelo1.translate[1] -= 5
-            elif event.key == pygame.K_d:
-                modelo1.translate[0] += 5
-            elif event.key == pygame.K_1:
-                rend.primitiveType = POINTS
-            elif event.key == pygame.K_2:
-                rend.primitiveType = LINES          
+            elif event.key == pygame.K_l:
+                rend.glClear()
+                rend.primitiveType = LINES
+            elif event.key == pygame.K_p:
+                rend.glClear()
+                rend.primitiveType = POINTS          
 
 
     rend.glClear()  # Limpiar la pantalla antes de dibujar nuevamente
