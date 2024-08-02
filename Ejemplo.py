@@ -12,19 +12,15 @@ height = 540
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()  # Se utiliza para asegurarse de que el juego corra a una velocidad específica de cuadros por segundo
 
-#Llenado de triangulos
-triangle1 = [[10,80],[50,160],[70,80]]
-triangle2 = [[180,50],[150,1],[70,180]]
-triangle3 = [[180,120],[120,160],[150,160]]
-
 
 #Cargar modelo
-modelo1 = Model("face.obj")
+modelo1 = Model("model.obj")
 
-modelo1.translate[2] = -10
-modelo1.scale[0] = 0.1
-modelo1.scale[1] = 0.1
-modelo1.scale[2] = 0.1
+
+modelo1.translate[2] = -15
+modelo1.scale[0] = 5
+modelo1.scale[1] = 5
+modelo1.scale[2] = 5
 
 # Pasar la pantalla al Renderer de GL
 rend = Renderer(screen)
@@ -32,10 +28,13 @@ rend.vertexShader = VertexShader #asgino el vertex
 
 rend.glColor(0, 0, 1)  # Establecer el color actual a magenta (RGB: 1, 0, 1)
 rend.glClearColor(0, 0, 0)  # Establecer el color del fondo a rosa (RGB: 1, 0.5, 1)
-
+rend.primitiveType = LINES
 # GameLoop
 # Esto es para asegurarse de que el bucle principal siga corriendo, simulando el comportamiento en segundo plano
 rend.models.append(modelo1)
+rend.camera.rotate[0] = -40 #rotar arriba
+rend.camera.translate[1] = 13  #mirada de arriba
+
 isRunning = True
 while isRunning:
     # Procesar eventos en la cola de eventos
@@ -89,11 +88,9 @@ while isRunning:
 
     # Dibujar lineas usando Bresenham
     
-    #rend.glRender()
+    rend.glRender()
 
-    rend.glTriangle(triangle1[0], triangle1[1], triangle1[2])
-    rend.glTriangle(triangle2[0], triangle2[1], triangle2[2])
-    rend.glTriangle(triangle3[0], triangle3[1], triangle3[2])
+    
     pygame.display.flip()  # Actualizar la pantalla con los cambios realizados
     clock.tick(60)  # Asegurar que el juego no exceda los 60 cuadros por segundo
 
