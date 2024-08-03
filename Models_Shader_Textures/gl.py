@@ -40,7 +40,7 @@ class Renderer(object):
 		self.fragmentShader = None
 		
 		self.primitiveType = TRIANGLES
-		
+		self.activeTexture = None
 		self.models = []
 
 
@@ -204,10 +204,13 @@ class Renderer(object):
 			# Agarrar su matriz modelo
 			mMat = model.GetModelMatrix()
 			
+			#Guardar la referencia a la textura a este modelo 
+			self.activeTexture = model.texture
+
 			# Aqui vamos a guardar todos los vertices y su info correspondiente
 			vertexBuffer = [ ]
 			
-			# Para cada cara del modelo, recorremos la info de vértices de esa cara
+			# Para cada cara del modelo, recorremos la info de vï¿½rtices de esa cara
 			for face in model.faces:
 				
 				# Aqui vamos a guardar los vertices de esta cara
@@ -236,8 +239,16 @@ class Renderer(object):
 					for value in pos:
 						vert.append(value)
 						
+					#obtenmos las cooordenadas de textura de la cara actual
+					vts = model.texCoords[face[i][1] - 1]
+
+					for value in vts:
+						vert.append(value)
+
 					# Agregamos la informacion de este vertices a la
 					# lista de vertices de esta cara
+					faceVerts.append(vert)
+
 					faceVerts.append(vert)
 					
 				# Agregamos toda la informacion de los tres vertices de
@@ -252,7 +263,7 @@ class Renderer(object):
 					for value in faceVerts[3]: vertexBuffer.append(value)
 
 			# Mandamos el buffer de vertices de este modelo a ser dibujado
-			self.glDrawPrimitives(vertexBuffer, 3)
+			self.glDrawPrimitives(vertexBuffer, 5)
 				
 
 	def glTriangle(self, A, B, C):
@@ -327,6 +338,11 @@ class Renderer(object):
 			# Teorema del intercepto para calcular D en X y Y
 			D = [ A[0] + ((B[1] - A[1]) / (C[1] - A[1])) * (C[0] - A[0]), B[1]]
 
+			u, v , w = barycentricCoords(A,B,C,D)
+			for i in range (2, len(A)):
+				#para calcular los valores del nuevo punto uA + vB + wC
+				D.append(u*A[i] + v*B[i] + w*C[i])
+
 			flatBottom(A, B, D)
 			flatTop(B, D, C)
 
@@ -349,14 +365,31 @@ class Renderer(object):
 		
 		u, v, w = bCoords
 
-		# Si contamos un Fragment Shader, obtener el color de ahí
+		#Hay que asegurar la suma de las coordenadas 
+		#baricentricas es igual a 1
+
+		if not isclose(u+v+w, 1.0):
+			return
+		#se calcula el valor de z en este pixel en especifico
+		z = u*A[2] + v*B[2] + w*C[2]
+
+		#Si el valor de Z para este punto es mayor que el valor guardado
+		#en el zbuffer este punto esta mas lejos y no se dibuja
+
+		if z >= self.zbuffer[x][y]:
+			return
+		
+		self.zbuffer[x][y] = z
+
+		# Si contamos un Fragment Shader, obtener el color de ahï¿½
 		color = self.currColor
 		
 		if self.fragmentShader != None:
-			# Mandar los parámetros necesarios al shader
+			# Mandar los parï¿½metros necesarios al shader
 			verts = (A, B, C)
 			color = self.fragmentShader(verts = verts,
-										bCoords = bCoords,)
+										bCoords = bCoords,
+										texture = self.activeTexture)
 
 		self.glPoint(x, y, color)
 

@@ -15,10 +15,14 @@ rend = Renderer(screen)
 rend.vertexShader = vertexShader
 rend.fragmentShader = fragmentShader
 
+modelo1 = Model("Models_Shader_Textures/models/model.obj")
+modelo1.LoadTexture("Models_Shader_Textures/textures/model.bmp")
+modelo1.translate[2] = -5
+rend.models.append(modelo1)
 
-puntoA = [50, 50, 0]
-puntoB = [250, 500, 0]
-puntoC = [500, 50, 0]
+# puntoA = [50, 50, 0]
+# puntoB = [250, 500, 0]
+# puntoC = [500, 50, 0]
 
 
 isRunning = True
@@ -53,8 +57,8 @@ while isRunning:
 					
 	rend.glClear()
 	
-	#rend.glRender()
-	rend.glTriangle(puntoA, puntoB, puntoC)
+	rend.glRender()
+	# rend.glTriangle(puntoA, puntoB, puntoC)
 
 	pygame.display.flip()
 	clock.tick(60)
