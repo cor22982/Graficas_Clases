@@ -38,9 +38,9 @@ class Renderer(object):
 		
 		self.vertexShader = None
 		self.fragmentShader = None
-		
-		self.primitiveType = TRIANGLES
 		self.activeTexture = None
+		self.primitiveType = TRIANGLES
+		
 		self.models = []
 
 
@@ -203,10 +203,9 @@ class Renderer(object):
 			# Por cada modelo en la lista, los dibujo
 			# Agarrar su matriz modelo
 			mMat = model.GetModelMatrix()
-			
-			#Guardar la referencia a la textura a este modelo 
-			self.activeTexture = model.texture
+			#Guardar la referencia a la textura de este modelo
 
+			self.activeTexture = model.texture
 			# Aqui vamos a guardar todos los vertices y su info correspondiente
 			vertexBuffer = [ ]
 			
@@ -238,17 +237,15 @@ class Renderer(object):
 					# Agregamos los valores de posicion al contenedor del vertice
 					for value in pos:
 						vert.append(value)
-						
-					#obtenmos las cooordenadas de textura de la cara actual
+					
+					#Obtemos la coordenadas de textura cara actual
 					vts = model.texCoords[face[i][1] - 1]
 
+					#agregamos los vts al contenedor del vertice
 					for value in vts:
-						vert.append(value)
-
+						vert.append(value) #si no funciona se le aplica %
 					# Agregamos la informacion de este vertices a la
 					# lista de vertices de esta cara
-					faceVerts.append(vert)
-
 					faceVerts.append(vert)
 					
 				# Agregamos toda la informacion de los tres vertices de
@@ -338,9 +335,10 @@ class Renderer(object):
 			# Teorema del intercepto para calcular D en X y Y
 			D = [ A[0] + ((B[1] - A[1]) / (C[1] - A[1])) * (C[0] - A[0]), B[1]]
 
-			u, v , w = barycentricCoords(A,B,C,D)
+			u, v, w = barycentricCoords(A,B,C,D)
+
 			for i in range (2, len(A)):
-				#para calcular los valores del nuevo punto uA + vB + wC
+				#calcular nuevo punto
 				D.append(u*A[i] + v*B[i] + w*C[i])
 
 			flatBottom(A, B, D)
@@ -365,20 +363,19 @@ class Renderer(object):
 		
 		u, v, w = bCoords
 
-		#Hay que asegurar la suma de las coordenadas 
-		#baricentricas es igual a 1
+		#Asegurarse que las coordenadas baricentricas es igual a 1
 
 		if not isclose(u+v+w, 1.0):
 			return
-		#se calcula el valor de z en este pixel en especifico
-		z = u*A[2] + v*B[2] + w*C[2]
 
-		#Si el valor de Z para este punto es mayor que el valor guardado
-		#en el zbuffer este punto esta mas lejos y no se dibuja
+		# se calcula el valor de z de este pixel en especifico
+		z = u * A[2] + v * B[2] + w*C[2]
+
+		#revisar si el valor de z para este punto es mayor que el valor guardado en el zbuffer
+		#esta mas lejos y no se dibuja
 
 		if z >= self.zbuffer[x][y]:
 			return
-		
 		self.zbuffer[x][y] = z
 
 		# Si contamos un Fragment Shader, obtener el color de ah�
@@ -388,8 +385,8 @@ class Renderer(object):
 			# Mandar los par�metros necesarios al shader
 			verts = (A, B, C)
 			color = self.fragmentShader(verts = verts,
-										bCoords = bCoords,
-										texture = self.activeTexture)
+																	bCoords = bCoords,
+																	texture = self.activeTexture)
 
 		self.glPoint(x, y, color)
 

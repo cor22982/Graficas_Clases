@@ -8,7 +8,7 @@ class Model(object):
 		objFile = Obj(filename)
 		
 		self.vertices = objFile.vertices
-		self.texCoords = objFile.texcoords # jalamos las coordenadas de textura del obj
+		self.texCoords = objFile.texcoords
 		self.faces = objFile.faces
 		
 		self.translate = [0,0,0]
@@ -16,9 +16,9 @@ class Model(object):
 		self.scale = [1,1,1]
 		self.texture = None
 
-
 	def LoadTexture (self, filename):
 		self.texture = Texture(filename)
+
 
 	def GetModelMatrix(self):
 		translateMat = TranslationMatrix(self.translate[0],

@@ -15,16 +15,17 @@ rend = Renderer(screen)
 rend.vertexShader = vertexShader
 rend.fragmentShader = fragmentShader
 
-modelo1 = Model("Models_Shader_Textures/models/model.obj")
-modelo1.LoadTexture("Models_Shader_Textures/textures/model.bmp")
+modelo1 = Model("Models_Shader_Textures\models\model.obj")
+modelo1.LoadTexture("Models_Shader_Textures\\textures\model.bmp")
 modelo1.translate[2] = -5
-rend.models.append(modelo1)
-
+modelo1.scale[0] = 2
+modelo1.scale[1] = 2
+modelo1.scale[2] = 2
 # puntoA = [50, 50, 0]
 # puntoB = [250, 500, 0]
 # puntoC = [500, 50, 0]
 
-
+rend.models.append(modelo1)
 isRunning = True
 while isRunning:
 	
