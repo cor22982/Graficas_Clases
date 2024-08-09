@@ -32,7 +32,7 @@ class Obj(object):
 				
 			elif prefix == "vt": # Coordenadas de textura
 				vts = list(map(float,value.split(" ")))
-				self.texcoords.append([vts[0],vts[1]])
+				self.texcoords.append([vts[0]%1,vts[1]%1])
 				
 			elif prefix == "vn": # Normales
 				norm = list(map(float,value.split(" ")))
