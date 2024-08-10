@@ -15,6 +15,9 @@ class Model(object):
 		self.rotate = [0,0,0]
 		self.scale = [1,1,1]
 		self.texture = None
+		self.normals = objFile.normals
+		self.vertexShader = None
+		self.fragmentShader = None
 
 	def LoadTexture (self, filename):
 		self.texture = Texture(filename)

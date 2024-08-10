@@ -36,8 +36,9 @@ class Renderer(object):
 		self.glClearColor(0,0,0)
 		self.glClear()
 		
-		self.vertexShader = None
-		self.fragmentShader = None
+		self.activeVertexShader = None
+		self.directionalLight = [1,0,0]
+		self.activeFragmentShader = None
 		self.activeTexture = None
 		self.primitiveType = TRIANGLES
 		
@@ -204,7 +205,8 @@ class Renderer(object):
 			# Agarrar su matriz modelo
 			mMat = model.GetModelMatrix()
 			#Guardar la referencia a la textura de este modelo
-
+			self.activeVertexShader = model.vertexShader
+			self.activeFragmentShader = model.fragmentShader
 			self.activeTexture = model.texture
 			# Aqui vamos a guardar todos los vertices y su info correspondiente
 			vertexBuffer = [ ]
@@ -227,8 +229,8 @@ class Renderer(object):
 					# Si contamos con un Vertex Shader, se manda cada vertice
 					# para transformalos. Recordar pasar las matrices necesarias
 					# para usarlas dentro del shader
-					if self.vertexShader:
-						pos = self.vertexShader(pos,
+					if self.activeVertexShader:
+						pos = self.activeVertexShader(pos,
 												modelMatrix = mMat,
 												viewMatrix = self.camera.GetViewMatrix(),
 												projectionMatrix = self.projectionMatrix,
@@ -246,6 +248,12 @@ class Renderer(object):
 						vert.append(value) #si no funciona se le aplica %
 					# Agregamos la informacion de este vertices a la
 					# lista de vertices de esta cara
+
+					#las normales estan en el indice 2
+					normals = model.normals[face[i][2] - 1]
+					for value in normals:
+						vert.append(value)
+
 					faceVerts.append(vert)
 					
 				# Agregamos toda la informacion de los tres vertices de
@@ -260,7 +268,7 @@ class Renderer(object):
 					for value in faceVerts[3]: vertexBuffer.append(value)
 
 			# Mandamos el buffer de vertices de este modelo a ser dibujado
-			self.glDrawPrimitives(vertexBuffer, 5)
+			self.glDrawPrimitives(vertexBuffer, 8)
 				
 
 	def glTriangle(self, A, B, C):
@@ -344,6 +352,19 @@ class Renderer(object):
 			flatBottom(A, B, D)
 			flatTop(B, D, C)
 
+	def glTriangle_bc(self, A,B,C):
+		minX = round(min(A[0], B[0], C[0]))
+		minY = round(min(A[1], B[1], C[1]))
+		maxX = round(max(A[0], B[0], C[0]))
+		maxY = round(max(A[1], B[1], C[1]))
+		for x in range (minX, maxX + 1):
+			for y in range (minY, maxY + 1):
+				P = [x,y]
+				if barycentricCoords(A,B,C,P) != None:
+					self.glDrawTrianglePoint(A,B,C,P)
+		
+
+
 
 	def glDrawTrianglePoint(self, A, B, C, P):
 		
@@ -381,12 +402,13 @@ class Renderer(object):
 		# Si contamos un Fragment Shader, obtener el color de ah�
 		color = self.currColor
 		
-		if self.fragmentShader != None:
+		if self.activeFragmentShader != None:
 			# Mandar los par�metros necesarios al shader
 			verts = (A, B, C)
-			color = self.fragmentShader(verts = verts,
+			color = self.activeFragmentShader(verts = verts,
 																	bCoords = bCoords,
-																	texture = self.activeTexture)
+																	texture = self.activeTexture,
+																	dirLight = self.directionalLight)
 
 		self.glPoint(x, y, color)
 
@@ -442,7 +464,7 @@ class Renderer(object):
 				B = [ buffer[i + j + vertexOffset * 1] for j in range(vertexOffset)]
 				C = [ buffer[i + j + vertexOffset * 2] for j in range(vertexOffset)]
 				
-				self.glTriangle(A, B, C)
+				self.glTriangle_bc(A, B, C)
 				
 				
 

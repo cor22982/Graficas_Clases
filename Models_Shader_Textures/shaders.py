@@ -34,12 +34,22 @@ def fragmentShader(**kwargs):
     A, B, C = kwargs["verts"]
     u, v, w = kwargs["bCoords"]
     texture = kwargs["texture"]
+    dirLight = kwargs["dirLight"]
 
     #sabiendo que las coordenadas de textura estan en 4ta 5ta posicion del indice
     #los obtenemos y guardamos
     vtA = [A[3], A[4]]
     vtB = [B[3], B[4]]
     vtC = [C[3], C[4]]
+
+    #sabiendo que los valores de las normales 
+    #estan en la 6ta 7ta 8va posicion hacemos lo mismo
+    #asumismo que vienen normalizadas
+    nA = [A[5], A[6], A[7]]
+    nB = [B[5], B[6], B[7]]
+    nC = [C[5], C[6], C[7]]
+
+
     # Empezamos siempre con color blanco
     r = 1
     g = 1
