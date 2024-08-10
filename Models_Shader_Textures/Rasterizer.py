@@ -23,7 +23,7 @@ modelo1.translate[0] = -2
 modelo2 = Model("Models_Shader_Textures\models\model.obj")
 modelo2.LoadTexture("Models_Shader_Textures\\textures\model.bmp")
 modelo2.vertexShader = vertexShader
-modelo2.fragmentShader = fragmentShader
+modelo2.fragmentShader = flatShader
 modelo2.translate[2] = -5
 modelo2.translate[0] = 0
 
@@ -31,7 +31,7 @@ modelo2.translate[0] = 0
 modelo3 = Model("Models_Shader_Textures\models\model.obj")
 modelo3.LoadTexture("Models_Shader_Textures\\textures\model.bmp")
 modelo3.vertexShader = vertexShader
-modelo3.fragmentShader = fragmentShader
+modelo3.fragmentShader = gouradShader
 modelo3.translate[2] = -5
 modelo3.translate[0] = 2
 
