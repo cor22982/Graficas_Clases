@@ -41,7 +41,7 @@ class Renderer(object):
 		self.activeFragmentShader = None
 		self.activeTexture = None
 		self.primitiveType = TRIANGLES
-		
+		self.modelMatrix = None
 		self.models = []
 
 
@@ -203,7 +203,7 @@ class Renderer(object):
 		for model in self.models:
 			# Por cada modelo en la lista, los dibujo
 			# Agarrar su matriz modelo
-			mMat = model.GetModelMatrix()
+			self.modelMatrix = model.GetModelMatrix()
 			#Guardar la referencia a la textura de este modelo
 			self.activeVertexShader = model.vertexShader
 			self.activeFragmentShader = model.fragmentShader
@@ -231,7 +231,7 @@ class Renderer(object):
 					# para usarlas dentro del shader
 					if self.activeVertexShader:
 						pos = self.activeVertexShader(pos,
-												modelMatrix = mMat,
+												modelMatrix = self.modelMatrix,
 												viewMatrix = self.camera.GetViewMatrix(),
 												projectionMatrix = self.projectionMatrix,
 												viewportMatrix = self.viewportMatrix)
@@ -408,7 +408,8 @@ class Renderer(object):
 			color = self.activeFragmentShader(verts = verts,
 																	bCoords = bCoords,
 																	texture = self.activeTexture,
-																	dirLight = self.directionalLight)
+																	dirLight = self.directionalLight,
+																	modelMatrix = self.modelMatrix)
 
 		self.glPoint(x, y, color)
 
