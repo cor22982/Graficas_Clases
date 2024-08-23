@@ -73,6 +73,7 @@ def gouradShader(**kwargs):
     u, v, w = kwargs["bCoords"]
     texture = kwargs["texture"]
     dirLight = kwargs["dirLight"]
+    modelMatrix = kwargs["modelMatrix"]
 
     #sabiendo que las coordenadas de textura estan en 4ta 5ta posicion del indice
     #los obtenemos y guardamos
@@ -90,9 +91,13 @@ def gouradShader(**kwargs):
     #normal de este pixel
     normal = [u*nA[0] + v*nB[0] + w*nC[0],
               u*nA[1] + v*nB[1] + w*nC[1],
-              u*nA[2] + v*nB[2] + w*nC[2]]
+              u*nA[2] + v*nB[2] + w*nC[2],
+              0]
     
-  
+    normal = modelMatrix @ normal
+    normal = normal.tolist()[0]
+    normal = [normal[0],normal[1],normal[2]]
+    normal /= np.linalg.norm(normal)
     # Empezamos siempre con color blanco
     r = 1
     g = 1

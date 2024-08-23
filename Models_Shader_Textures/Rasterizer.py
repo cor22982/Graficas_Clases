@@ -5,7 +5,7 @@ from gl import *
 from model import Model
 from shaders import *
 
-width = 960
+width = 540
 height = 540
 
 screen = pygame.display.set_mode((width, height), pygame.SCALED  )
@@ -13,35 +13,26 @@ clock = pygame.time.Clock()
 
 rend = Renderer(screen)
 
-modelo1 = Model("Models_Shader_Textures\models\model.obj")
-modelo1.LoadTexture("Models_Shader_Textures\\textures\model.bmp")
-modelo1.vertexShader = vertexShader
-modelo1.fragmentShader = fragmentShader
-modelo1.translate[2] = -5
-modelo1.translate[0] = -2
+
 
 modelo2 = Model("Models_Shader_Textures\models\model.obj")
 modelo2.LoadTexture("Models_Shader_Textures\\textures\model.bmp")
 modelo2.vertexShader = vertexShader
-modelo2.fragmentShader = flatShader
+modelo2.fragmentShader = gouradShader
 modelo2.translate[2] = -5
 modelo2.translate[0] = 0
+modelo2.rotate[1]=90
 
 
-modelo3 = Model("Models_Shader_Textures\models\model.obj")
-modelo3.LoadTexture("Models_Shader_Textures\\textures\model.bmp")
-modelo3.vertexShader = vertexShader
-modelo3.fragmentShader = gouradShader
-modelo3.translate[2] = -5
-modelo3.translate[0] = 2
+
 
 # puntoA = [50, 50, 0]
 # puntoB = [250, 500, 0]
 # puntoC = [500, 50, 0]
 
-rend.models.append(modelo1)
+
 rend.models.append(modelo2)
-rend.models.append(modelo3)
+
 isRunning = True
 while isRunning:
 	
