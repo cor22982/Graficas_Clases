@@ -397,6 +397,9 @@ class Renderer(object):
 
 		if z >= self.zbuffer[x][y]:
 			return
+		
+		if z< -1 or z>1:
+			return
 		self.zbuffer[x][y] = z
 
 		# Si contamos un Fragment Shader, obtener el color de ah�
