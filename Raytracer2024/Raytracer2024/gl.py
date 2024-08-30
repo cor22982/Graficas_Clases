@@ -135,6 +135,8 @@ class RendererRT(object):
 		
 		for obj in self.scene:
 			intersect = obj.ray_intersect(orig, direction)
+			if intersect:
+				break
 			
 		return intersect
 
