@@ -1,4 +1,6 @@
 import struct
+
+import pygame
 from camera import Camera
 from math import tan, pi
 import numpy as np
@@ -156,6 +158,7 @@ class RendererRT(object):
 					
 					if self.glCastRay(self.camera.translate, dir):
 						self.glPoint(x, y)
+						pygame.display.flip()
 					
 
 					

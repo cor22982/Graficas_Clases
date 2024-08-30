@@ -10,7 +10,9 @@ screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
 
 rt = RendererRT(screen)
-rt.scene.append(Sphere([0,0,-5], 1.5)) #la creo en todo
+rt.scene.append(Sphere([0,0,-30], 1.5)) #la creo en todo
+rt.scene.append(Sphere([0,0,5], 1.5)) #la creo en todo
+
 rt.glRender()
 isRunning = True
 while isRunning:
