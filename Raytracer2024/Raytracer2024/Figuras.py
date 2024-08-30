@@ -27,4 +27,5 @@ class Sphere(Shape):
             t0 = t1
         if t0< 0:
             return False
+        P = np.add(origin, np.multiply(dir, t0)) 
         return True        
