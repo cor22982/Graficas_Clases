@@ -5,7 +5,6 @@ from camera import Camera
 from math import tan, pi
 import numpy as np
 
-
 def char(c):
 	# 1 byte
 	return struct.pack("=c", c.encode("ascii"))
@@ -35,6 +34,7 @@ class RendererRT(object):
 		self.glClear()
 		
 		self.scene = []
+		self.lights = []
 		
 
 	def glViewport(self, x, y, width, height):
@@ -130,15 +130,18 @@ class RendererRT(object):
 				
 					
 	def glCastRay(self, orig, direction):
-		
-		intersect = False
-		
+		intercept = None
+		hit = None
+		depth = float('inf') #profundidad
 		for obj in self.scene:
-			intersect = obj.ray_intersect(orig, direction)
-			if intersect:
-				break
-			
-		return intersect
+			intercept = obj.ray_intersect(orig, direction)
+			if intercept != None:
+				hit = intercept
+				# si yo encuentro contacto con otro objeto si este punto que encontre 
+				if intercept.distance < depth:
+					hit = intercept
+					depth = intercept.distance
+		return hit
 
 
 	def glRender(self):
@@ -158,8 +161,11 @@ class RendererRT(object):
 					dir = [pX, pY, -self.nearPlane]
 					dir /= np.linalg.norm(dir)
 					
-					if self.glCastRay(self.camera.translate, dir):
-						self.glPoint(x, y)
+					intercept = self.glCastRay(self.camera.translate, dir)
+
+					if intercept != None:
+						color = intercept.obj.material.GetSurfaceColor(intercept,self)
+						self.glPoint(x, y, color=color)
 						pygame.display.flip()
 					
 
