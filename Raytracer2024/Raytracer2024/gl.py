@@ -164,7 +164,7 @@ class RendererRT(object):
 					intercept = self.glCastRay(self.camera.translate, dir)
 
 					if intercept != None:
-						color = intercept.obj.material.GetSurfaceColor(intercept,self)
+						color = intercept.obj.material.GetSurfaceColor(intercept, renderer = self)
 						self.glPoint(x, y, color=color)
 						pygame.display.flip()
 					

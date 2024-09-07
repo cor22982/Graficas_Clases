@@ -14,8 +14,8 @@ clock = pygame.time.Clock()
 rt = RendererRT(screen)
 
 #Materiales
-brick = Material(difuse=[1,0.2,0.2])
-grass = Material(difuse=[0.2,1,0.2])
+brick = Material(difuse=[1,0.2,0.2], spec= 32, ks= 0.05)
+grass = Material(difuse=[0.2,1,0.2], spec= 128, ks= 0.2)
 
 #Lights 
 rt.lights.append(DirectionalLight(direction=[0,0,0]))

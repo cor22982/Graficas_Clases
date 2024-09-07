@@ -4,6 +4,7 @@
 # Spot light es como una linterna. De este punto tiene un angulo minimo y solo tira luz en un cono
 
 import numpy as np
+from MathLib import *
 class Light(object):
   def __init__(self, color = [0,0,0], intensity = 1, lightType = "None"):
     self.color = color
@@ -12,6 +13,10 @@ class Light(object):
 
   def GetLightColor(self):
     return [(i* self.intensity) for i in self.color]
+
+  def GetSpecularColor(self, intercept, viewPos):
+    return [0,0,0]
+
 
 
 
@@ -30,6 +35,20 @@ class DirectionalLight(Light):
     if intercept:
       dir = [(i *-1) for i in self.direction]
       intesidad = np.dot(intercept.normal, dir)
-      intesidad = min(0, min(1, intesidad))
+      intesidad = max(0, min(1, intesidad))
+      intesidad *= (1-intercept.obj.material.ks)
       lightColor = [(i * intesidad) for i in lightColor]
     return lightColor
+  
+  def GetSpecularColor(self, intercept, viewPos):
+    specColor = super().GetSpecularColor(intercept, viewPos)
+    if intercept:
+      dir = [(i*-1) for i in self.direction]
+      reflect  = reflectVector(intercept.normal, dir)
+      viewDIr = np.subtract(viewPos, intercept.point)
+      viewPos /= np.linalg.norm(viewDIr)
+      specularity = max (0,(np.dot(viewDIr, reflect) ** intercept.obj.material.spec))
+      specularity *= intercept.obj.material.ks
+      specularity *= self.intensity
+      specColor = [(i*specularity) for i in specColor]
+    return specColor
