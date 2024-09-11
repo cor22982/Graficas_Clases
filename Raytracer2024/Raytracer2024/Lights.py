@@ -30,14 +30,8 @@ class DirectionalLight(Light):
     super().__init__(color, intensity,"Directional")
     self.direction = direction / np.linalg.norm(direction)
   
-  def GetLightColor(self, intercept = None):
+  def GetLightColor(self):
     lightColor = super().GetLightColor()
-    if intercept:
-      dir = [(i *-1) for i in self.direction]
-      intesidad = np.dot(intercept.normal, dir)
-      intesidad = max(0, min(1, intesidad))
-      intesidad *= (1-intercept.obj.material.ks)
-      lightColor = [(i * intesidad) for i in lightColor]
     return lightColor
   
   def GetSpecularColor(self, intercept, viewPos):

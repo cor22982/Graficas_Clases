@@ -136,7 +136,6 @@ class RendererRT(object):
 		for obj in self.scene:
 			intercept = obj.ray_intersect(orig, direction)
 			if intercept != None:
-				hit = intercept
 				# si yo encuentro contacto con otro objeto si este punto que encontre 
 				if intercept.distance < depth:
 					hit = intercept
@@ -164,7 +163,7 @@ class RendererRT(object):
 					intercept = self.glCastRay(self.camera.translate, dir)
 
 					if intercept != None:
-						color = intercept.obj.material.GetSurfaceColor(intercept, renderer = self)
+						color = intercept.obj.material.GetSurfaceColor(intercept, self)
 						self.glPoint(x, y, color=color)
 						pygame.display.flip()
 					
