@@ -18,7 +18,8 @@ class Material (object):
     finalColor = self.diffuse
     for light in renderer.lights:
       currectLightCOlor = light.GetLightColor(intercept)
-      lightColor = [(lightColor[i] + currectLightCOlor[i]) for i in range (3)]
+      currentSpecularCOlor = light.GetSpecularColor(intercept, renderer.camera.translate)
+      lightColor = [(lightColor[i] + currectLightCOlor[i] + currentSpecularCOlor[i]) for i in range (3)]
     finalColor = [(finalColor[i] * lightColor[i]) for i in range(3)]
     finalColor = [min(1, finalColor[i]) for i in range(3)]
     return finalColor
