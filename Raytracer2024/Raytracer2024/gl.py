@@ -4,7 +4,8 @@ import pygame
 from camera import Camera
 from math import tan, pi
 import numpy as np
-
+#es el valor maximo de recursion	
+MAX_RECIRSOPM_DEPTH = 3
 def char(c):
 	# 1 byte
 	return struct.pack("=c", c.encode("ascii"))
@@ -129,7 +130,9 @@ class RendererRT(object):
 					file.write(color)
 				
 					
-	def glCastRay(self, orig, direction, sceneObject = None):
+	def glCastRay(self, orig, direction, sceneObject = None, recursion = 0):
+		if recursion >= MAX_RECIRSOPM_DEPTH:
+			return None
 		intercept = None
 		hit = None
 		depth = float('inf') #profundidad

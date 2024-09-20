@@ -14,7 +14,7 @@ class Material (object):
     self.ks = ks
     self.matType = matType
 
-  def GetSurfaceColor(self, intercept, renderer):
+  def GetSurfaceColor(self, intercept, renderer, recursion = 0):
 
     # el modelo fond de iluminacion phong
     #PHNG REFLETION MODEL
@@ -40,11 +40,11 @@ class Material (object):
       raydir = [-x for x in intercept.rayDirection]
       reflect = reflectVector(intercept.normal, raydir)
       ##generamos el rayo que va a venir del nuevo punto y con el vecto de reflecto
-      reflectintercept = renderer.glCastRay(intercept.point, reflect, intercept.obj)
+      reflectintercept = renderer.glCastRay(intercept.point, reflect, intercept.obj, recursion+1)
       #en base a este intercepto tengo que ahora obtener un nuevo color de la superficie
       #si hice contacto con algun objeto
       if reflectintercept != None:
-        reflectColor = reflectintercept.obj.material.GetSurfaceColor(reflectintercept, renderer)
+        reflectColor = reflectintercept.obj.material.GetSurfaceColor(reflectintercept, renderer, recursion+1)
       else:
         reflectColor = renderer.clearColor
     
