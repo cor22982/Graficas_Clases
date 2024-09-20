@@ -18,7 +18,9 @@ class Sphere(Shape):
     def ray_intersect(self, origin, dir):
         L = np.subtract(self.position, origin)
         tca = np.dot(L, dir)
-        d = np.linalg.norm(L) **2 - tca**2
+        a = np.linalg.norm(L)
+        f = a **2
+        d = f - tca**2
         if d > self.radius:
             return None
         thc = (self.radius ** 2 - d ** 2) ** 0.5 
@@ -33,4 +35,4 @@ class Sphere(Shape):
         normal = np.subtract(P, self.position) 
         normal /= np.linalg.norm(normal)
 
-        return Intercept(point=P, normal=normal, distance=t0, obj=self)
+        return Intercept(point=P, normal=normal, distance=t0, obj=self, rayDirection=dir)
