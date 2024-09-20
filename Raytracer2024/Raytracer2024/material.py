@@ -46,7 +46,7 @@ class Material (object):
       if reflectintercept != None:
         reflectColor = reflectintercept.obj.material.GetSurfaceColor(reflectintercept, renderer, recursion+1)
       else:
-        reflectColor = renderer.clearColor
+        reflectColor = renderer.glEnviromentMapColor(intercept.point, reflect)
     
     finalColor = [(finalColor[i] * (lightColor[i] + reflectColor[i])) for i in range(3)]
     finalColor = [min(1, finalColor[i]) for i in range(3)]

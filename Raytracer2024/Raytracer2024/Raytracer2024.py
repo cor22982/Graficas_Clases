@@ -5,6 +5,7 @@ from pygame.locals import *
 from Figuras import *
 from material import *
 from Lights import *
+from texture import Texture
 width = 188
 height = 188
 
@@ -12,7 +13,7 @@ screen = pygame.display.set_mode((width, height), pygame.SCALED )
 clock = pygame.time.Clock()
 
 rt = RendererRT(screen)
-
+rt.enveriomentMap = Texture("Raytracer2024\Raytracer2024\parkingLot.bmp")
 rt.glClearColor(0.5,0.0,0.0)
 rt.glClear()
 #Materiales

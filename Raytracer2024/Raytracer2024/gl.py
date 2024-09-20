@@ -2,7 +2,7 @@ import struct
 
 import pygame
 from camera import Camera
-from math import tan, pi
+from math import tan, pi, atan2, acos
 import numpy as np
 #es el valor maximo de recursion	
 MAX_RECIRSOPM_DEPTH = 3
@@ -21,7 +21,7 @@ def dword(d):
 
 
 class RendererRT(object):
-	def __init__(self, screen):
+	def __init__(self, screen, enveriomentMap =None):
 		
 		self.screen = screen
 		_, _, self.width, self.height = screen.get_rect()
@@ -36,7 +36,7 @@ class RendererRT(object):
 		
 		self.scene = []
 		self.lights = []
-		
+		self.enveriomentMap = enveriomentMap
 
 	def glViewport(self, x, y, width, height):
 		self.vpX = int(x)
@@ -81,6 +81,13 @@ class RendererRT(object):
 		self.frameBuffer = [[self.clearColor for y in range(self.height)]
 							for x in range(self.width)]
 		
+
+	def glEnviromentMapColor(self, orig, dir):
+		if self.enveriomentMap:
+			x = (atan2(dir[2], dir[0]) / (2*pi) + 0.5)
+			y = acos(-dir[1]) / pi
+			return self.enveriomentMap.getColor(x,y)
+		return self.clearColor
 
 	def glPoint(self, x, y, color = None):
 		# Pygame empieza a renderizar desde la esquina
@@ -166,11 +173,12 @@ class RendererRT(object):
 					dir /= np.linalg.norm(dir)
 					
 					intercept = self.glCastRay(self.camera.translate, dir)
-
+					color = [0,0,0]
 					if intercept != None:
 						color = intercept.obj.material.GetSurfaceColor(intercept, self)
-						self.glPoint(x, y, color=color)
-						pygame.display.flip()
-					
+					else:
+						color = self.glEnviromentMapColor(self.camera.translate, dir)
+					self.glPoint(x, y, color=color)
+					pygame.display.flip()
 
 					
