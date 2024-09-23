@@ -1,5 +1,6 @@
 import numpy as np
 from Intercept import *
+from math import atan2, acos, pi
 class Shape(object):
     def __init__(self, position, material):
         self.position = position
@@ -34,5 +35,9 @@ class Sphere(Shape):
         P = np.add(origin, np.multiply(dir, t0))
         normal = np.subtract(P, self.position) 
         normal /= np.linalg.norm(normal)
+        
+        #normal como la direccion del rayo para calcular la direccion de la esfera texturizada
+        u = (atan2(normal[2], normal[0])) / (2*pi) +0.5
+        v = acos(-normal[1]) /pi
 
-        return Intercept(point=P, normal=normal, distance=t0, obj=self, rayDirection=dir)
+        return Intercept(point=P, normal=normal, distance=t0, obj=self, rayDirection=dir, texCords=[u,v])
