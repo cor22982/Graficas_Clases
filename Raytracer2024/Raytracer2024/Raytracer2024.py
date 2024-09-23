@@ -30,7 +30,7 @@ rt.lights.append(DirectionalLight(direction=[-1,-1,-1], intensity=0.8 ))
 rt.lights.append(AmbientLight(intensity=0.1))
 
 #objets
-rt.scene.append(Sphere([0,0,-10], radius=1.5, material=glass)) #la creo en todo
+rt.scene.append(Sphere([0,0,-5], radius=1.5, material=glass)) #la creo en todo
 rt.glRender()
 isRunning = True
 while isRunning:
