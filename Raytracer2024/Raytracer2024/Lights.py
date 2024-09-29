@@ -52,3 +52,15 @@ class DirectionalLight(Light):
       specularity *= self.intensity
       specColor = [(i*specularity) for i in specColor]
     return specColor
+
+class PointLight(Light):
+  def __init__(self, color=[1, 1, 1], intensity=1, position= [0,0,0]):
+    super().__init__(color, intensity, "Point")
+    self.position = position
+  
+  def GetLightColor(self, intercept=None):
+    return super().GetLightColor(intercept)
+
+  def GetSpecularColor(self, intercept, viewPos):
+    return super().GetSpecularColor(intercept, viewPos)
+  
