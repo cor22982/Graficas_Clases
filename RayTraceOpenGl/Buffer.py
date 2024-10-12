@@ -42,18 +42,31 @@ class Buffer(object):
     # si esta normalizado
     # stride o el tamaño del paso de cada cuanto informacion hay un nuevo atributo
     #offset este ser refiere a en donde en que posicion empieza la informacion de posicion
+    # ahora cada cuando hay un nuevo vertice le ponemos en vez de 3 6
     glVertexAttribPointer(0,
                           3,
                           GL_FLOAT,
                           GL_FALSE,
-                          4 * 3,
+                          4 * 6,
                           ctypes.c_void_p(0))
 
     #este paso es que atributo quiero activar
     glEnableVertexAttribArray(0)
 
+    # Atributo de colores
+    # el offset va a ser diferente
+    glVertexAttribPointer(1,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          4 * 6,
+                          ctypes.c_void_p(4*3))
+
+    #este paso es que atributo quiero activar
+    glEnableVertexAttribArray(1)
+
     #dibujar buffer
     #modo en que modo
     # desde donde empezamos a dibujar
     # cuantos vertices vamos a dibujar por vertices hay 3 por eso se coloca
-    glDrawArrays(GL_TRIANGLES, 0,int(len(self.vertBuffer)/3))
+    glDrawArrays(GL_TRIANGLES, 0,int(len(self.vertBuffer)/6))

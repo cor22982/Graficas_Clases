@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from gl import Renderer
 from Buffer import Buffer
+from shaders import *
 #Vamos a hacer un poco de regresion porque lo que vamos a hacer es un rasterizador
 #OPEN GL ya usa la tarjeta de video jajaj no tengo ni modo toco pedir una
 
@@ -20,12 +21,17 @@ clock = pygame.time.Clock()
 
 renderer = Renderer(screen=screen)
 
+renderer.SetShaders(vShader=vertex_shader, fShader=fragmet_shader)
+
 #y si hacemos un triangulo xyz
 # todo paso de corrido punto 1 x,y,z punto 2 x,y,z
 
-triangle = [-0.5,-0.5,0,
-            0   ,0.5,0,
-            0.5,-0.5,0]
+# le vamos a agregar nuevas propiedad que va a ser el color
+
+#             posision               color
+triangle = [-0.5,-0.5,0,            1,0,0,
+            0   ,0.5,0,             0,1,0,
+            0.5,-0.5,0,             0,0,1]
 
 #guardaoms la informacion en el buffer
 #hecho a partir de la informacion del triangulo
