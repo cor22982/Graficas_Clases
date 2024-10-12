@@ -17,7 +17,7 @@ void main()
 }
 """
 
-
+# no hay que enviarle el atributo del vertice . En este caso tiene antes que pasar por el vertice
 fragmet_shader = """
 #version 450 core
 in vec3 outColor;
