@@ -14,10 +14,11 @@ out vec2 outTextCoords;
 out vec3 outNormals;
 uniform mat4 modelMatrix;
 uniform float time;
-
+uniform mat4 viewMatrix;
+uniform mat4 proyectionMatrix;
 void main()
 {
-  gl_Position = modelMatrix * vec4(position + normals * sin(time)/10, 1.0);
+  gl_Position = proyectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
   outTextCoords =  textCoords;
   outNormals = normals;
 }

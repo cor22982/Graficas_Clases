@@ -1,7 +1,7 @@
 import glm
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
-
+from camera import Camera
 class Renderer(object):
   def __init__(self, screen):
     self.screen = screen
@@ -17,7 +17,7 @@ class Renderer(object):
     self.time = 0
     self.value = 0
     #no es tan facil de venir y agregar el triangulo . Sino que voy a crear una nueva clase para guardarlo
-
+    self.camera = Camera(width=self.width, height=self.height)
     self.scene = []
     self.active_shaders = None
 
@@ -47,6 +47,16 @@ class Renderer(object):
     if self.active_shaders is not None:
       glUseProgram(self.active_shaders)
       glUniform1f( glGetUniformLocation(self.active_shaders, "time"), self.time)
+      glUniformMatrix4fv( glGetUniformLocation(self.active_shaders, 
+                                                  "viewMatrix"), 
+                                                  1, 
+                                                  GL_FALSE, 
+                                                  glm.value_ptr(self.camera.GetViewMaTrix()))
+      glUniformMatrix4fv( glGetUniformLocation(self.active_shaders, 
+                                                  "proyectionMatrix"), 
+                                                  1, 
+                                                  GL_FALSE, 
+                                                  glm.value_ptr(self.camera.GetProjectionMatrix()))
     #cuando yo llamo render lo que quiero es pasar por cada objeto 
     #y renderizar cada objeto
     for obj in self.scene:
@@ -57,6 +67,7 @@ class Renderer(object):
                                                   1, 
                                                   GL_FALSE, 
                                                   glm.value_ptr(obj.GetModelMatrix()))
+         
       obj.Render()
     
 

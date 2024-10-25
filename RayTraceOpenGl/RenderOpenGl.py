@@ -7,7 +7,7 @@ from model import Model
 #Vamos a hacer un poco de regresion porque lo que vamos a hacer es un rasterizador
 #OPEN GL ya usa la tarjeta de video jajaj no tengo ni modo toco pedir una
 
-width = 960
+width = 540
 height = 540
 
 pygame.init()
@@ -42,7 +42,8 @@ renderer.SetShaders(vShader=vertex_shader, fShader=fragmet_shader)
 faceModel = Model('RayTraceOpenGl\model (1).obj')
 faceModel.AddTextures('RayTraceOpenGl\Textures\model.bmp')
 renderer.scene.append(faceModel)
-faceModel.rotation.y = 180
+faceModel.rotation.y = 0
+faceModel.translation.z = -3
 isRunning = True
 
 while isRunning:
@@ -62,8 +63,21 @@ while isRunning:
     
   if keys[K_LEFT]:
     faceModel.rotation.y -=10*deltaTime
-  elif keys[K_RIGHT]:
+  if keys[K_RIGHT]:
     faceModel.rotation.y +=10*deltaTime
+  
+  if keys[K_a]:
+    renderer.camera.position.x -= 1 *deltaTime
+  
+  if keys[K_d]:
+    renderer.camera.position.x += 1 *deltaTime
+  
+  if keys[K_w]:
+    renderer.camera.position.y += 1 *deltaTime
+  
+  if keys[K_s]:
+    renderer.camera.position.y -= 1 *deltaTime
+
 
   renderer.time += deltaTime
   renderer.Render()
