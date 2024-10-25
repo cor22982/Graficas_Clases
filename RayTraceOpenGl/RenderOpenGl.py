@@ -55,9 +55,9 @@ while isRunning:
     elif event.type == pygame.KEYDOWN:
       if event.key  == pygame.K_ESCAPE:
         isRunning = False
-      elif event.key == pygame.K_1:
+      elif event.key == pygame.K_F1:
         renderer.FillMode()
-      elif event.key == pygame.K_2:
+      elif event.key == pygame.K_F2:
         renderer.WireFrameMode()
     
   if keys[K_LEFT]:
