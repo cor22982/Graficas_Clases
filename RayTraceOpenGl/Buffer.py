@@ -47,26 +47,38 @@ class Buffer(object):
                           3,
                           GL_FLOAT,
                           GL_FALSE,
-                          4 * 6,
+                          4 * 8,
                           ctypes.c_void_p(0))
 
     #este paso es que atributo quiero activar
     glEnableVertexAttribArray(0)
 
-    # Atributo de colores
+    # Atributo de textCoords
     # el offset va a ser diferente
     glVertexAttribPointer(1,
-                          3,
+                          2,
                           GL_FLOAT,
                           GL_FALSE,
-                          4 * 6,
+                          4 * 8,
                           ctypes.c_void_p(4*3))
 
     #este paso es que atributo quiero activar
     glEnableVertexAttribArray(1)
 
+    # Atributo de Noormales
+    # el offset va a ser diferente
+    glVertexAttribPointer(2,
+                          3,
+                          GL_FLOAT,
+                          GL_FALSE,
+                          4 * 8,
+                          ctypes.c_void_p(4*5))
+
+    #este paso es que atributo quiero activar
+    glEnableVertexAttribArray(2)
+
     #dibujar buffer
     #modo en que modo
     # desde donde empezamos a dibujar
     # cuantos vertices vamos a dibujar por vertices hay 3 por eso se coloca
-    glDrawArrays(GL_TRIANGLES, 0,int(len(self.vertBuffer)/6))
+    glDrawArrays(GL_TRIANGLES, 0,int(len(self.vertBuffer)/8))

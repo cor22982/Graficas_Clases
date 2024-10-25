@@ -8,23 +8,30 @@
 vertex_shader = """
 #version 450 core
 layout(location=0) in vec3 position;
-layout(location=1) in vec3 vColor;
-out vec3 outColor;
+layout(location=1) in vec2 textCoords;
+layout(location=2) in vec3 normals;
+out vec2 outTextCoords;
+out vec3 outNormals;
+uniform mat4 modelMatrix;
+uniform float time;
+
 void main()
 {
-  gl_Position = vec4(position, 1.0);
-  outColor = vColor;
+  gl_Position = modelMatrix * vec4(position + normals * sin(time)/10, 1.0);
+  outTextCoords =  textCoords;
+  outNormals = normals;
 }
 """
-
+# uniform datos que son todos iguales 
 # no hay que enviarle el atributo del vertice . En este caso tiene antes que pasar por el vertice
 fragmet_shader = """
 #version 450 core
-in vec3 outColor;
+in vec2 outTextCoords;
+in vec3 outNormals;
 out vec4 fragColor;
-
+uniform sampler2D tex;
 void main()
 {
-  fragColor = vec4(outColor, 1.0);
+  fragColor = texture(tex, outTextCoords);
 }
 """

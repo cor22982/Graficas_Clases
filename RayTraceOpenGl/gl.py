@@ -14,10 +14,19 @@ class Renderer(object):
     glEnable(GL_DEPTH_TEST)
     glViewport(0,0, self.width, self.height)
 
+    self.time = 0
+    self.value = 0
     #no es tan facil de venir y agregar el triangulo . Sino que voy a crear una nueva clase para guardarlo
 
     self.scene = []
     self.active_shaders = None
+
+  def FillMode(self):
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+  
+  def WireFrameMode(self):
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+
 
   def SetShaders(self, vShader, fShader):
     if vShader is not None and fShader is not None:
@@ -37,9 +46,17 @@ class Renderer(object):
     # si tengo shaders entonces los activo
     if self.active_shaders is not None:
       glUseProgram(self.active_shaders)
+      glUniform1f( glGetUniformLocation(self.active_shaders, "time"), self.time)
     #cuando yo llamo render lo que quiero es pasar por cada objeto 
     #y renderizar cada objeto
     for obj in self.scene:
+      if self.active_shaders is not None:
+         # le vamos a mandar la matriz de modelo
+         glUniformMatrix4fv( glGetUniformLocation(self.active_shaders, 
+                                                  "modelMatrix"), 
+                                                  1, 
+                                                  GL_FALSE, 
+                                                  glm.value_ptr(obj.GetModelMatrix()))
       obj.Render()
     
 
