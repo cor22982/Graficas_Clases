@@ -79,7 +79,9 @@ while isRunning:
       elif event.key == pygame.K_7:
         fShader = negative_shader
         renderer.SetShaders(vShader, fShader)
-    
+  
+
+  #move model
   if keys[K_LEFT]:
     faceModel.rotation.y -=10*deltaTime
   if keys[K_RIGHT]:
@@ -97,6 +99,20 @@ while isRunning:
   if keys[K_s]:
     renderer.camera.position.y -= 1 *deltaTime
 
+
+  #Move LIghte
+  
+  if keys[K_j]:
+    renderer.pointLight.x -= 1 *deltaTime
+  
+  if keys[K_l]:
+    renderer.pointLight.x += 1 *deltaTime
+  
+  if keys[K_i]:
+    renderer.pointLight.z -= 1 *deltaTime
+  
+  if keys[K_k]:
+    renderer.pointLight.z += 1 *deltaTime
 
   renderer.time += deltaTime
   renderer.Render()

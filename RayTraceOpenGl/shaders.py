@@ -12,13 +12,16 @@ layout(location=1) in vec2 textCoords;
 layout(location=2) in vec3 normals;
 out vec2 outTextCoords;
 out vec3 outNormals;
+out vec4 outPosition;
+
 uniform mat4 modelMatrix;
 uniform float time;
 uniform mat4 viewMatrix;
 uniform mat4 proyectionMatrix;
 void main()
-{
-  gl_Position = proyectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
+{ 
+  outPosition = modelMatrix * vec4(position, 1.0);
+  gl_Position = proyectionMatrix * viewMatrix * outPosition;
   outTextCoords =  textCoords;
   outNormals = normals;
 }
@@ -31,13 +34,16 @@ layout(location=1) in vec2 textCoords;
 layout(location=2) in vec3 normals;
 out vec2 outTextCoords;
 out vec3 outNormals;
+out vec4 outPosition;
+
 uniform mat4 modelMatrix;
 uniform float time;
 uniform mat4 viewMatrix;
 uniform mat4 proyectionMatrix;
 void main()
 {
-  gl_Position = proyectionMatrix * viewMatrix * modelMatrix * vec4(position + normals * sin(time) /10, 1.0);
+  outPosition = modelMatrix * vec4(position + normals * sin(time) /10, 1.0);
+  gl_Position = proyectionMatrix * viewMatrix * outPosition;
   outTextCoords =  textCoords;
   outNormals = normals;
 }
@@ -52,13 +58,16 @@ layout(location=1) in vec2 textCoords;
 layout(location=2) in vec3 normals;
 out vec2 outTextCoords;
 out vec3 outNormals;
+out vec4 outPosition;
+
 uniform mat4 modelMatrix;
 uniform float time;
 uniform mat4 viewMatrix;
 uniform mat4 proyectionMatrix;
 void main()
 {
-  gl_Position = proyectionMatrix * viewMatrix * modelMatrix * vec4(position + vec3(0,1,0) * sin(time * position.x *10) /10, 1.0);
+  outPosition = modelMatrix * vec4(position + vec3(0,1,0) * sin(time * position.x *10) /10, 1.0);
+  gl_Position = proyectionMatrix * viewMatrix * outPosition;
   outTextCoords =  textCoords;
   outNormals = normals;
 }
@@ -69,11 +78,15 @@ fragmet_shader = """
 #version 450 core
 in vec2 outTextCoords;
 in vec3 outNormals;
+in vec4 outPosition;
+
 out vec4 fragColor;
 uniform sampler2D tex;
+uniform vec3 pointLight;
 void main()
 {
-  fragColor = texture(tex, outTextCoords);
+  float intensity = dot(outNormals, normalize(pointLight - outPosition.xyz));
+  fragColor = texture(tex, outTextCoords) * intensity;
 }
 """
 
@@ -81,6 +94,8 @@ negative_shader = """
 #version 450 core
 in vec2 outTextCoords;
 in vec3 outNormals;
+
+
 out vec4 fragColor;
 uniform sampler2D tex;
 void main()

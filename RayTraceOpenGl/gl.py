@@ -16,6 +16,7 @@ class Renderer(object):
 
     self.time = 0
     self.value = 0
+    self.pointLight = glm.vec3(0,0,0)
     #no es tan facil de venir y agregar el triangulo . Sino que voy a crear una nueva clase para guardarlo
     self.camera = Camera(width=self.width, height=self.height)
     self.scene = []
@@ -47,6 +48,10 @@ class Renderer(object):
     if self.active_shaders is not None:
       glUseProgram(self.active_shaders)
       glUniform1f( glGetUniformLocation(self.active_shaders, "time"), self.time)
+      glUniform3fv( glGetUniformLocation(self.active_shaders, "pointLight"), 
+                   1,
+                   glm.value_ptr(self.pointLight) )
+      
       glUniformMatrix4fv( glGetUniformLocation(self.active_shaders, 
                                                   "viewMatrix"), 
                                                   1, 
