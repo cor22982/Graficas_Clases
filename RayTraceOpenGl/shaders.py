@@ -23,6 +23,46 @@ void main()
   outNormals = normals;
 }
 """
+
+distortion_shader = """
+#version 450 core
+layout(location=0) in vec3 position;
+layout(location=1) in vec2 textCoords;
+layout(location=2) in vec3 normals;
+out vec2 outTextCoords;
+out vec3 outNormals;
+uniform mat4 modelMatrix;
+uniform float time;
+uniform mat4 viewMatrix;
+uniform mat4 proyectionMatrix;
+void main()
+{
+  gl_Position = proyectionMatrix * viewMatrix * modelMatrix * vec4(position + normals * sin(time) /10, 1.0);
+  outTextCoords =  textCoords;
+  outNormals = normals;
+}
+"""
+
+
+
+water_shader = """
+#version 450 core
+layout(location=0) in vec3 position;
+layout(location=1) in vec2 textCoords;
+layout(location=2) in vec3 normals;
+out vec2 outTextCoords;
+out vec3 outNormals;
+uniform mat4 modelMatrix;
+uniform float time;
+uniform mat4 viewMatrix;
+uniform mat4 proyectionMatrix;
+void main()
+{
+  gl_Position = proyectionMatrix * viewMatrix * modelMatrix * vec4(position + vec3(0,1,0) * sin(time * position.x *10) /10, 1.0);
+  outTextCoords =  textCoords;
+  outNormals = normals;
+}
+"""
 # uniform datos que son todos iguales 
 # no hay que enviarle el atributo del vertice . En este caso tiene antes que pasar por el vertice
 fragmet_shader = """
@@ -34,5 +74,17 @@ uniform sampler2D tex;
 void main()
 {
   fragColor = texture(tex, outTextCoords);
+}
+"""
+
+negative_shader = """
+#version 450 core
+in vec2 outTextCoords;
+in vec3 outNormals;
+out vec4 fragColor;
+uniform sampler2D tex;
+void main()
+{
+  fragColor = 1 - texture(tex, outTextCoords);
 }
 """

@@ -46,6 +46,10 @@ faceModel.rotation.y = 0
 faceModel.translation.z = -3
 isRunning = True
 
+
+vShader = vertex_shader
+fShader = fragmet_shader
+renderer.SetShaders(vShader, fShader)
 while isRunning:
   #esto va a tener mas uso en un frame rate mas aceptable
   deltaTime = clock.tick(60) / 1000
@@ -60,6 +64,21 @@ while isRunning:
         renderer.FillMode()
       elif event.key == pygame.K_F2:
         renderer.WireFrameMode()
+      elif event.key == pygame.K_3:
+        vShader = vertex_shader
+        renderer.SetShaders(vShader, fShader)
+      elif event.key == pygame.K_4:
+        vShader = distortion_shader
+        renderer.SetShaders(vShader, fShader)
+      elif event.key == pygame.K_5:
+        vShader = water_shader
+        renderer.SetShaders(vShader, fShader)
+      elif event.key == pygame.K_6:
+        fShader = fragmet_shader
+        renderer.SetShaders(vShader, fShader)
+      elif event.key == pygame.K_7:
+        fShader = negative_shader
+        renderer.SetShaders(vShader, fShader)
     
   if keys[K_LEFT]:
     faceModel.rotation.y -=10*deltaTime
