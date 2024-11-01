@@ -6,30 +6,39 @@
 # los shaders son dificiles de debuggear porque es imposible poner un breackpoint
 # glPosition es donde se guarda la posicion de los vertices
 
-skybox_vertex_shader = """
+skybox_vertex_shader = '''
 #version 450 core
-layout (location=0) in vec3 inPosition;
+
+layout (location = 0) in vec3 inPosition;
+
 uniform mat4 viewMatrix;
-uniform mat4 proyectionMatrix;
+uniform mat4 projectionMatrix;
+
 out vec3 texCoords;
 
-void main(){
-  texCoords = inPosition;
-  gl_Position = proyectionMatrix*viewMatrix * vec4(inPosition,1.0);
+void main()
+{
+    texCoords = inPosition;
+    gl_Position = projectionMatrix * viewMatrix * vec4(inPosition, 1.0);
 }
-"""
 
-skybox_fragment_shader = """
+'''
+
+skybox_fragment_shader = '''
 #version 450 core
+
 uniform samplerCube skybox;
+
 in vec3 texCoords;
+
 out vec4 fragColor;
 
-void main(){
-  fragColor = texture(skybox, texCoords);
+void main()
+{
+    fragColor = texture(skybox, texCoords);
 }
 
-"""
+'''
 vertex_shader = """
 #version 450 core
 layout(location=0) in vec3 position;
