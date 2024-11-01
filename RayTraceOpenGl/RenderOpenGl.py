@@ -104,6 +104,10 @@ while isRunning:
   if keys[K_s]:
     camDistance += 2 * deltaTime
 
+  mouseButtons = pygame.mouse.get_pressed()
+  if mouseButtons[0]:
+    camAngle += pygame.mouse.get_rel()[0] * deltaTime*5
+
   #Move LIghte
   
   if keys[K_j]:
