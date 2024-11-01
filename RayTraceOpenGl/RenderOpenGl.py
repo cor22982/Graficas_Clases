@@ -39,6 +39,10 @@ renderer.SetShaders(vShader=vertex_shader, fShader=fragmet_shader)
 # renderer.scene.append(Buffer(data=triangle))
 
 
+# Cube map conjunto de texturas para representar un cielo
+
+skyboxTextures = []
+
 faceModel = Model('RayTraceOpenGl\model (1).obj')
 faceModel.AddTextures('RayTraceOpenGl\Textures\model.bmp')
 renderer.scene.append(faceModel)

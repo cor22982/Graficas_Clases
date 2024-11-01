@@ -2,6 +2,7 @@ import glm
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
 from camera import Camera
+from Skybox import Skybox
 class Renderer(object):
   def __init__(self, screen):
     self.screen = screen
@@ -16,11 +17,16 @@ class Renderer(object):
 
     self.time = 0
     self.value = 0
+    self.skybox = None
     self.pointLight = glm.vec3(0,0,0)
     #no es tan facil de venir y agregar el triangulo . Sino que voy a crear una nueva clase para guardarlo
     self.camera = Camera(width=self.width, height=self.height)
     self.scene = []
     self.active_shaders = None
+
+  def CreateSkybox(self, textureLIst, vShader, fShader):
+    self.skybox = Skybox(texturesList=textureLIst, vertexShader=vShader, fragmentShader=fShader)
+
 
   def FillMode(self):
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
@@ -44,6 +50,9 @@ class Renderer(object):
     #tambien borre la informacion de profundidad
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+    if self.skybox is not None:
+      self.skybox.Render(viewMatrix=self.camera.GetViewMaTrix(),
+                         projectionMatrix=self.camera.GetProjectionMatrix())
     # si tengo shaders entonces los activo
     if self.active_shaders is not None:
       glUseProgram(self.active_shaders)
