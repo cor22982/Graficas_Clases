@@ -50,6 +50,12 @@ isRunning = True
 vShader = vertex_shader
 fShader = fragmet_shader
 renderer.SetShaders(vShader, fShader)
+
+#Para manipular la camara
+camDistance = 5
+camAngle = 0
+
+
 while isRunning:
   #esto va a tener mas uso en un frame rate mas aceptable
   deltaTime = clock.tick(60) / 1000
@@ -87,18 +93,16 @@ while isRunning:
   if keys[K_RIGHT]:
     faceModel.rotation.y +=10*deltaTime
   
-  if keys[K_a]:
-    renderer.camera.position.x -= 1 *deltaTime
   
-  if keys[K_d]:
-    renderer.camera.position.x += 1 *deltaTime
-  
-  if keys[K_w]:
-    renderer.camera.position.y += 1 *deltaTime
-  
-  if keys[K_s]:
-    renderer.camera.position.y -= 1 *deltaTime
 
+  if keys[K_a]:
+    camAngle -= 45 * deltaTime
+  if keys[K_d]:
+    camAngle += 45 * deltaTime
+  if keys[K_w]:
+    camDistance -= 2 * deltaTime
+  if keys[K_s]:
+    camDistance += 2 * deltaTime
 
   #Move LIghte
   
@@ -115,6 +119,9 @@ while isRunning:
     renderer.pointLight.z += 1 *deltaTime
 
   renderer.time += deltaTime
+
+  renderer.camera.LookAt(faceModel.translation)
+  renderer.camera.Orbit(center=faceModel.translation, distance=camDistance, angle=camAngle)
   renderer.Render()
   pygame.display.flip()
 

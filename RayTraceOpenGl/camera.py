@@ -1,8 +1,11 @@
 import glm
-
+import numpy as np
+from numpy import sin, radians, cos
 class Camera(object):
   def __init__(self, width, height):
     self.position = glm.vec3(0,0,0)
+
+    #angulos de euler
     self.rotation = glm.vec3(0,0,0)
     self.screenWidth = width
     self.screenHeight = height
@@ -28,3 +31,22 @@ class Camera(object):
   
   def CreateProjectionMatrix(self, fov, nearPlane, farPlane):
     self.proyectionMatrix = glm.perspective(glm.radians(fov), self.screenWidth/self.screenHeight, nearPlane, farPlane)
+
+
+  def LookAt(self, center):
+    viewMatrix = glm.lookAt(self.position,center, glm.vec3(0,1,0))
+    camMatrix = glm.inverse(viewMatrix)
+    
+
+    #Los quaterniones es un sistema de numeros complejos para representar rotaciones
+    #Los quaterniones representan una matriz de 4x4 en un vector4 . De esta manera eliminar espacio de sobra
+
+    #esta funcion me lo regresa en radianes y lo necesito en grados
+    self.rotation = glm.degrees(glm.eulerAngles(glm.quat_cast(camMatrix)))
+  
+
+  def Orbit(self, center, distance, angle):
+    self.position.x = center.x + sin(radians(angle)) * distance
+    self.position.z = center.z + cos(radians(angle)) * distance
+
+
