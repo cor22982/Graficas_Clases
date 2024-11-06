@@ -1,3 +1,4 @@
+
 from numpy import array, float32
 import glm
 from OpenGL.GL import * 
@@ -118,4 +119,3 @@ class Skybox(object):
 		glDrawArrays(GL_TRIANGLES, 0, 36)
 
 		glDepthMask(GL_TRUE)
-		

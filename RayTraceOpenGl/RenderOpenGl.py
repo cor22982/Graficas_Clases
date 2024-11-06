@@ -7,7 +7,7 @@ from model import Model
 #Vamos a hacer un poco de regresion porque lo que vamos a hacer es un rasterizador
 #OPEN GL ya usa la tarjeta de video jajaj no tengo ni modo toco pedir una
 
-width = 540
+width = 960
 height = 540
 
 pygame.init()
@@ -41,7 +41,16 @@ renderer.SetShaders(vShader=vertex_shader, fShader=fragmet_shader)
 
 # Cube map conjunto de texturas para representar un cielo
 
-skyboxTextures = []
+skyboxTextures = ['RayTraceOpenGl\Textures\Skybox_Textures\\right.webp',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\left.webp',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\\top.webp',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\\bottom.webp',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\\front.webp',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\\back.webp']
+
+renderer.CreateSkybox(textureLIst=skyboxTextures,
+                      vShader=skybox_vertex_shader,
+                      fShader=skybox_fragment_shader)
 
 faceModel = Model('RayTraceOpenGl\model (1).obj')
 faceModel.AddTextures('RayTraceOpenGl\Textures\model.bmp')

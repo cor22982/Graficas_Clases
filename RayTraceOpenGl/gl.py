@@ -25,7 +25,7 @@ class Renderer(object):
     self.active_shaders = None
 
   def CreateSkybox(self, textureLIst, vShader, fShader):
-    self.skybox = Skybox(texturesList=textureLIst, vertexShader=vShader, fragmentShader=fShader)
+    self.skybox = Skybox(textureList=textureLIst, vertexShader=vShader, fragmentShader=fShader)
 
 
   def FillMode(self):
