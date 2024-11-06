@@ -41,12 +41,12 @@ renderer.SetShaders(vShader=vertex_shader, fShader=fragmet_shader)
 
 # Cube map conjunto de texturas para representar un cielo
 
-skyboxTextures = ['RayTraceOpenGl\Textures\Skybox_Textures\\right.webp',
-                  'RayTraceOpenGl\Textures\Skybox_Textures\left.webp',
-                  'RayTraceOpenGl\Textures\Skybox_Textures\\top.webp',
-                  'RayTraceOpenGl\Textures\Skybox_Textures\\bottom.webp',
-                  'RayTraceOpenGl\Textures\Skybox_Textures\\front.webp',
-                  'RayTraceOpenGl\Textures\Skybox_Textures\\back.webp']
+skyboxTextures = ['RayTraceOpenGl\Textures\Skybox_Textures\\right.jpg',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\left.jpg',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\\top.jpg',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\\bottom.jpg',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\\front.jpg',
+                  'RayTraceOpenGl\Textures\Skybox_Textures\\back.jpg']
 
 renderer.CreateSkybox(textureLIst=skyboxTextures,
                       vShader=skybox_vertex_shader,
